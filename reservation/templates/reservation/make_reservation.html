@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+
+
+{% block content %}
+    <h4 class="text-center">Reserving at: {{ reservation_date }}</h4>
+    <br>
+    <div class="container d-flex align-items-center justify-content-center">
+        <form action="" method="post" novalidation>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Reserve" class="btn btn-success">
+        </form>
+    </div>
+{% endblock content %}

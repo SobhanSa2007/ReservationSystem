@@ -1,0 +1,80 @@
+{% extends "_base.html" %}
+
+{% block extra_headers %}
+    <style>
+        .accordion-button {
+            background-color: white !important;
+            color: black !important;
+            box-shadow: none !important;
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: white !important;
+            color: black !important;
+            box-shadow: none !important;
+        }
+        .accordion-button:focus {
+            box-shadow: none !important;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: .5rem;
+            margin-top: 1rem;
+        }
+        .day-box {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .day-today {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .day-today .accordion-button {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+        }
+
+    </style>
+{% endblock extra_headers %}
+
+
+{% block content %}
+<div class="container my-4">
+    <h2>{{ month_name }} {{ year }}</h2>
+    <div class="days-grid">
+        {% for d in days %}
+            <div class="day-box 
+                {% if d < today_day %}day-past{% elif d == today_day %}day-today{% endif %}">
+                <div class="accordion" id="accordion-{{ d }}">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-{{ d }}">
+                            <button class="accordion-button {% if d < today_day %}disabled{% else %}collapsed{% endif %}" 
+                                    type="button"
+                                    {% if d >= today_day %}
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse-{{ d }}"
+                                        aria-expanded="false"
+                                        aria-controls="collapse-{{ d }}"
+                                    {% endif %}>
+                                {{ d }}
+                            </button>
+                        </h2>
+                        {% if d >= today_day %}
+                            <div id="collapse-{{ d }}" class="accordion-collapse collapse"
+                                aria-labelledby="heading-{{ d }}" data-bs-parent="#accordion-{{ d }}">
+                                <div class="accordion-body">
+                                    <a href="{% url 'reservation:make_reservation' year=year month=month day=d %}" class="btn btn-success">SetTime</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

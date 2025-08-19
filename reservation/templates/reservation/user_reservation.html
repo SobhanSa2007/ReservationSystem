@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+
+{% block content %}
+    {% if user_reservations %}
+        <br>
+        <div class="row">
+            {% for resv in user_reservations %}
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ resv.full_name }}</h5>
+                            <p class="card-text">
+                                <p>NatID: {{ resv.nationality_id }}</p>
+                                <p>PhoneNumber: {{ resv.phone_number }}</p>
+                                <p>Date: {{ resv.date }}</p>
+                                <p>Time: {{ resv.time }}</p>
+                            </p>
+                            <a href="{% url "reservation:reservation_delete" resv.nationality_id %}" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h3>No Reservation for you</h3>
+    {% endif %}
+{% endblock content %}
