@@ -26,21 +26,28 @@ class ReservationListView(View):
 
         # the count of days in current month
         days_in_month = calendar.monthrange(year=year, month=month)[1]
-
-        # list of days (1 to 30/31)
-        days = list(range(1, days_in_month + 1))
-
+        
         month_name = calendar.month_name[month]
+
+        days_info = []
+        for d in range(1, days_in_month + 1):
+            day_date = date(year, month, d)
+            weekday_name = calendar.day_name[day_date.weekday()]  # Monday, Tuesday, ...
+            days_info.append({
+                "day": d,
+                "weekday": weekday_name
+            })
+
 
         return render(
             request,
-            template_name=self.template_name,
-            context={
+            self.template_name,
+            {
                 'year': year,
                 'month': month,
                 'month_name': month_name,
-                'days': days,
-                'today_day': today_day
+                'days_info': days_info,
+                'today_day': today_day,
             }
         )
     
