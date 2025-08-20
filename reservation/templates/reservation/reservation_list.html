@@ -43,31 +43,31 @@
 
 
 {% block content %}
-<div class="container my-4">
-    <h2>{{ month_name }} {{ year }}</h2>
+    <br>
+    <h2 class="text-center">{{ month_name }} {{ year }}</h2>
     <div class="days-grid">
-        {% for d in days %}
+        {% for d in days_info %}
             <div class="day-box 
-                {% if d < today_day %}day-past{% elif d == today_day %}day-today{% endif %}">
-                <div class="accordion" id="accordion-{{ d }}">
+                {% if d.day < today_day %}day-past{% elif d.day == today_day %}day-today{% endif %}">
+                <div class="accordion" id="accordion-{{ d.day }}">
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading-{{ d }}">
-                            <button class="accordion-button {% if d < today_day %}disabled{% else %}collapsed{% endif %}" 
+                        <h2 class="accordion-header" id="heading-{{ d.day }}">
+                            <button class="accordion-button {% if d.day < today_day %}disabled{% else %}collapsed{% endif %}" 
                                     type="button"
-                                    {% if d >= today_day %}
+                                    {% if d.day >= today_day %}
                                         data-bs-toggle="collapse"
-                                        data-bs-target="#collapse-{{ d }}"
+                                        data-bs-target="#collapse-{{ d.day }}"
                                         aria-expanded="false"
-                                        aria-controls="collapse-{{ d }}"
+                                        aria-controls="collapse-{{ d.day }}"
                                     {% endif %}>
-                                {{ d }}
+                                {{ d.day }} - {{ d.weekday }}
                             </button>
                         </h2>
-                        {% if d >= today_day %}
-                            <div id="collapse-{{ d }}" class="accordion-collapse collapse"
-                                aria-labelledby="heading-{{ d }}" data-bs-parent="#accordion-{{ d }}">
+                        {% if d.day >= today_day %}
+                            <div id="collapse-{{ d.day }}" class="accordion-collapse collapse"
+                                aria-labelledby="heading-{{ d.day }}" data-bs-parent="#accordion-{{ d.day }}">
                                 <div class="accordion-body">
-                                    <a href="{% url 'reservation:make_reservation' year=year month=month day=d %}" class="btn btn-success">SetTime</a>
+                                    <a href="{% url 'reservation:make_reservation' year=year month=month day=d.day %}" class="btn btn-success">SetTime</a>
                                 </div>
                             </div>
                         {% endif %}
@@ -76,5 +76,4 @@
             </div>
         {% endfor %}
     </div>
-</div>
 {% endblock content %}
