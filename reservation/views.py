@@ -66,14 +66,6 @@ class MakeReservationView(View):
         if form.is_valid():
             cd = form.cleaned_data
 
-            # reservation = Reservation.objects.filter(
-            #     date=reservated_date,
-            #     time=cd['time']
-            # )
-            # if reservation:
-            #     messages.error(request, 'there is a reservation at this time', 'danger')
-            #     return redirect('reservation:reservation_list')
-
             user_reservations = request.session.get('user_reservations', [])
             new_reservation = {
                 'full_name':cd['full_name'],
