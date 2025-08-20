@@ -26,7 +26,7 @@ class ReservationListView(View):
 
         # the count of days in current month
         days_in_month = calendar.monthrange(year=year, month=month)[1]
-        
+
         month_name = calendar.month_name[month]
 
         days_info = []
@@ -53,6 +53,13 @@ class ReservationListView(View):
     
 
 class MakeReservationView(View):
+    """
+        Making reservation by getting
+        datas from the form and adding
+        -them in the session to work -
+        with them later.
+    """
+
     template_name = 'reservation/make_reservation.html'
     form = MakeReservationForm
 
@@ -73,6 +80,7 @@ class MakeReservationView(View):
         if form.is_valid():
             cd = form.cleaned_data
 
+            # adding datas in session
             user_reservations = request.session.get('user_reservations', [])
             new_reservation = {
                 'full_name':cd['full_name'],
@@ -84,6 +92,7 @@ class MakeReservationView(View):
             user_reservations.append(new_reservation)
             request.session['user_reservations']=user_reservations
 
+            # creating new object(new reservation)
             Reservation.objects.create(
                 full_name=cd['full_name'],
                 nationality_id=cd['nationality_id'],
@@ -105,6 +114,12 @@ class MakeReservationView(View):
     
 
 class UserReservationView(View):
+    """
+        Getting user reservations and
+        show them for him
+        -(getting user reservations from session).
+    """
+
     template_name = 'reservation/user_reservation.html'
 
     def get(self, request):
@@ -132,6 +147,11 @@ class ReservationDeleteView(View):
     
 
 class ReservationDeleteDoneView(View):
+    """
+        Deleting user reservation
+        from DataBase and session.
+    """
+    
     def post(self, request, natid):
         reservation = get_object_or_404(Reservation, nationality_id=natid)
         reservation.delete()
