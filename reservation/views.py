@@ -123,13 +123,20 @@ class UserReservationView(View):
     template_name = 'reservation/user_reservation.html'
 
     def get(self, request):
-        user_reservations = request.session.get('user_reservations', [])
-        if user_reservations:
-            return render(
-                request,
-                template_name=self.template_name,
-                context={'user_reservations':user_reservations}
-            )
+        user_reservations_session = request.session.get('user_reservations', [])
+        if user_reservations_session:
+            # getting nationality_ids from user reservations session
+            nationality_ids=[resv['nationality_id'] for resv in user_reservations_session]
+
+            # getting user reservations from DataBase
+            reservations = Reservation.objects.filter(nationality_id__in=nationality_ids)
+
+            if reservations.exists():
+                return render(
+                    request,
+                    template_name=self.template_name,
+                    context={'user_reservations':reservations}
+                )
             
         messages.warning(
             request,
