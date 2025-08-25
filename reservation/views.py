@@ -117,7 +117,7 @@ class UserReservationView(View):
     """
         Getting user reservations and
         show them for him
-        -(getting user reservations from session).
+        -(getting user reservations from Database).
     """
 
     template_name = 'reservation/user_reservation.html'
