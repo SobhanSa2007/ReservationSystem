@@ -38,13 +38,22 @@
             color: #155724 !important;
         }
 
+        .day-full {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .day-full .accordion-button {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+        }
+
     </style>
 {% endblock extra_headers %}
 
 
 {% block content %}
     <br>
-    <h2 class="text-center">{{ month_name }} {{ year }}</h2>
+    {% comment %} <h2 class="text-center">{{ month_name }} {{ year }}</h2>
     <div class="days-grid">
         {% for d in days_info %}
             <div class="day-box 
@@ -74,6 +83,45 @@
                     </div>
                 </div>
             </div>
+        {% endfor %}
+    </div> {% endcomment %}
+
+
+    <h2 class="text-center">{{ month_name }} {{ year }}</h2>
+    <div class="days-grid">
+        {% for d in days_info %}
+            <div class="day-box 
+            {% if d.day < today_day %}day-past
+            {% elif d.fully_booked %}day-full
+            {% elif d.day == today_day %}day-today
+            {% endif %}">
+                <div class="accordion" id="accordion-{{ d.day }}">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-{{ d.day }}">
+                            <button class="accordion-button 
+                                    {% if d.day < today_day or d.fully_booked %}disabled{% else %}collapsed{% endif %}" 
+                                    type="button"
+                                    {% if d.day >= today_day and not d.fully_booked %}
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse-{{ d.day }}"
+                                        aria-expanded="false"
+                                        aria-controls="collapse-{{ d.day }}"
+                                    {% endif %}>
+                                {{ d.day }} - {{ d.weekday }}
+                            </button>
+                        </h2>
+                        {% if d.day >= today_day and not d.fully_booked %}
+                            <div id="collapse-{{ d.day }}" class="accordion-collapse collapse"
+                                aria-labelledby="heading-{{ d.day }}" data-bs-parent="#accordion-{{ d.day }}">
+                                <div class="accordion-body">
+                                    <a href="{% url 'reservation:make_reservation' year=year month=month day=d.day %}" class="btn btn-success">SetTime</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
         {% endfor %}
     </div>
 {% endblock content %}

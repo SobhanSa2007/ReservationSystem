@@ -29,13 +29,23 @@ class ReservationListView(View):
 
         month_name = calendar.month_name[month]
 
+        
+        # all current month reservations
+        reservations = Reservation.objects.filter(date__year=year, date__month=month)
+
         days_info = []
         for d in range(1, days_in_month + 1):
             day_date = date(year, month, d)
             weekday_name = calendar.day_name[day_date.weekday()]  # Monday, Tuesday, ...
+
+            # counting reservations of a day
+            reservations_count = reservations.filter(date=day_date).count()
+            fully_booked = reservations_count >= len(Reservation.RESERVATION_TIMES)
+
             days_info.append({
                 "day": d,
-                "weekday": weekday_name
+                "weekday": weekday_name,
+                "fully_booked": fully_booked
             })
 
 
